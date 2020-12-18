@@ -1,4 +1,3 @@
-/* eslint-disable strict */
 let totalBooksCount = (books) => books.length;
 
 let totalAccountsCount = (accounts) => accounts.length;
@@ -29,26 +28,26 @@ function mostCommonGenres(books) {
   });
   return array.slice(0, 5);
 }
+function getAuthorName(authors, id) {
+  let authorName = '';
+  authors.forEach((author) => {
+    if (author.id === id)
+      authorName = `${author.name.first} ${author.name.last}`;
+  });
+  return authorName;
+}
+///////////////////////HELPER FUNCTION////////////////////////////////////////////////
+
+function sortTool(arr) {
+  return arr.sort((a, b) => {
+    if (a.count < b.count) return 1;
+    if (a.count > b.count) return -1;
+    return 0;
+  });
+}
+////////HELPER FUNCTION////////////////////////////////////////////////
 
 function mostPopularBooks(books) {
-  ///////////////////////////////////////////////////////////////
-  function getAuthorName(authors, id) {
-    let authorName = '';
-    authors.forEach((author) => {
-      if (author.id === id)
-        authorName = `${author.name.first} ${author.name.last}`;
-    });
-    return authorName;
-  }
-  /////////////////////////////////////////////////////////////
-  function sortTool(arr) {
-    return arr.sort((a, b) => {
-      if (a.count < b.count) return 1;
-      if (a.count > b.count) return -1;
-      return 0;
-    });
-  }
-  ////////////////////////////////////////////////////////
   let arr = [];
   books.forEach((book) => {
     let newObject = {};
@@ -60,34 +59,19 @@ function mostPopularBooks(books) {
 }
 
 function mostPopularAuthors(books, authors) {
-  function getAuthorName(authors, id) {
-    let authorName = '';
-    authors.forEach((author) => {
-      if (author.id === id)
-        authorName = `${author.name.first} ${author.name.last}`;
-    });
-    return authorName;
-  }
-  function sortTool(arr) {
-    return arr.sort((a, b) => {
-      if (a.count < b.count) return 1;
-      if (a.count > b.count) return -1;
-      return 0;
-    });
-  }
   let arr = [];
-  let x = books.reduce((acc, book) => {
+  let reduce = books.reduce((acc, book) => {
     acc[book.authorId]
       ? (acc[book.authorId] += book.borrows.length)
       : (acc[book.authorId] = book.borrows.length);
     return acc;
   }, {});
-  for (let key in x) {
-    let value = x[key];
-    let newObject = {};
-    newObject['name'] = getAuthorName(authors, parseInt(key));
-    newObject['count'] = value;
-    arr.push(newObject);
+  for (let key in reduce) {
+    let value = reduce[key];
+    let newObj = {};
+    newObj['name'] = getAuthorName(authors, parseInt(key));
+    newObj['count'] = value;
+    arr.push(newObj);
   }
   return sortTool(arr).slice(0, 5);
 }
